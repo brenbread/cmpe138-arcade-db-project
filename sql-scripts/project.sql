@@ -20,7 +20,7 @@ create table food
     
 create table customer
 	(cust_id numeric(4,0),
-    balance numeric(4,2),
+    balance numeric(6,2),
     money_spent numeric(4,2),
     primary key (cust_id)
 	);
@@ -29,7 +29,7 @@ create table gift_shop
 	(item_id numeric(4,0),
     item_name varchar(20),
     item_quantity numeric(4,0),
-    item_cost numeric(4,2),
+    item_cost numeric(8,2),
     primary key (item_id)
     );
 

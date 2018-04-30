@@ -4,8 +4,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var employeeDB = require('./routes/employee.js');
+//database routes
+var employeeDB = require('./routes/employeeDB.js');
 var gamesDB = require('./routes/gamesDB.js');
+var customerDB = require('./routes/customerDB.js');
+var beverageDB = require('./routes/beverageDB.js');
+var foodDB = require('./routes/foodDB.js');
+var poolTableDB = require('./routes/poolTableDB.js');
+var giftshopDB = require('./routes/giftshopDB.js');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -22,10 +28,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//use routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/employeedb', employeeDB);
+
 app.use('/gamesdb', gamesDB);
+app.use('/customerdb', customerDB);
+app.use('/beveragedb', beverageDB);
+app.use('/fooddb', foodDB);
+app.use('/poolTabledb', poolTableDB);
+app.use('/giftshopdb', giftshopDB);
 
 
 // catch 404 and forward to error handler

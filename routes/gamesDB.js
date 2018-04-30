@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 
-//database route
+
 router.get('/', function(req, res, next) {
   var con = mysql.createConnection({
     host: "localhost",
@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
     if (err) throw err;
     console.log("Database Connected!");
 });
-
+  //return all rows of arcade games
   con.query('SELECT * FROM arcade_machine',  function(err, rows) {
     res.json(rows);
     if (err) throw err;
