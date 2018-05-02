@@ -23,4 +23,4 @@ Main requirement is to use a relational database management system (RDBMS) with 
 
 ## TODO
 - Add new pieces of data to each respective table
-- Update perations
+- Update Operations
