@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors')
 
 //database routes
 var employeeDB = require('./routes/employeeDB.js');
@@ -18,6 +19,8 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+app.use(cors());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -32,12 +35,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/employeedb', employeeDB);
-
 app.use('/gamesdb', gamesDB);
 app.use('/customerdb', customerDB);
 app.use('/beveragedb', beverageDB);
 app.use('/fooddb', foodDB);
-app.use('/poolTabledb', poolTableDB);
+app.use('/pooltabledb', poolTableDB);
 app.use('/giftshopdb', giftshopDB);
 
 

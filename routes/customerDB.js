@@ -21,7 +21,14 @@ router.get('/', function(req, res, next) {
     res.json(rows);
     if (err) throw err;
   });
+});
 
+router.delete('/', function(req, res, next) {
+    con.query('DELETE FROM customer WHERE cust_id = '+req.body.id+'', function (error, results, fields) {
+        if(error) throw error;
+        else res.send("success");
+        console.log("Customer deleted");
+    });
 });
 
 module.exports = router;

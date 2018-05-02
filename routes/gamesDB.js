@@ -20,7 +20,14 @@ router.get('/', function(req, res, next) {
     res.json(rows);
     if (err) throw err;
   });
+});
 
+router.delete('/', function(req, res, next) {
+    con.query('DELETE FROM arcade_machine WHERE game_id = '+req.body.id+'', function (error, results, fields) {
+        if(error) throw error;
+        else res.send("success");
+        console.log("Arcade machine deleted");
+    });
 });
 
 module.exports = router;

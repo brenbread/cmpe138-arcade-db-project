@@ -45,10 +45,30 @@ class ArcadeApp extends Component {
   }
 }
 
+//return count of items
 class CustomerTable extends Component {
-  state = {
-    customer: [],
+  constructor() {
+    super();
+    this.state = {
+      customer: [],
+    }
+    this.deleteEntry = this.deleteEntry.bind(this);
   }
+
+  deleteEntry(e){
+    var data = {
+      id: e.cust_id
+    }
+    fetch("http://localhost:3001/customerdb", {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+        console.log(err)
+    });
+}
 
   componentDidMount() {
     fetch('/customerdb')
@@ -78,7 +98,7 @@ class CustomerTable extends Component {
                   <td>{cust.balance}</td>
                   <td>{cust.money_spent}</td>
                   <td><button type="button" className="btn btn-outline-warning">&#9998;</button></td>
-                  <td><button type="button" className="btn btn-outline-danger">&#10005;</button></td>
+                    <td><button onClick={() => this.deleteEntry(cust)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
                 </tr>)}
           </tbody>
         </table>
@@ -89,9 +109,28 @@ class CustomerTable extends Component {
   }
 }
 class EmployeeTable extends Component {
-  state = {
-    employee: [],
+  constructor() {
+    super();
+    this.state = {
+      employee: []
+    }
+    this.deleteEntry = this.deleteEntry.bind(this);
   }
+
+  deleteEntry(e){
+    var data = {
+      id: e.emp_id
+    }
+    fetch("http://localhost:3001/employeedb", {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+        console.log(err)
+    });
+}
 
   componentDidMount() {
       fetch('/employeedb')
@@ -103,7 +142,7 @@ class EmployeeTable extends Component {
 
   render() {
     return (
-      <div className = "UserTable">
+      <div className = "Table">
         <table className="table">
           <thead>
             <tr>
@@ -111,7 +150,7 @@ class EmployeeTable extends Component {
               <th scope="col">Name</th>
               <th scope="col">Job</th>
               <th scope="col">Update</th>
-              <th scope="col">Delete</th>
+              <th scope="col">Fire</th>
             </tr>
           </thead>
           <tbody>
@@ -121,11 +160,11 @@ class EmployeeTable extends Component {
                   <td>{emp.emp_name}</td>
                   <td>{emp.emp_type}</td>
                   <td><button type="button" className="btn btn-outline-warning">&#9998;</button></td>
-                  <td><button type="button" className="btn btn-outline-danger">&#10005;</button></td>
+                  <td><button onClick={() => this.deleteEntry(emp)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
                 </tr>)}
           </tbody>
         </table>
-        <button type="button" className="btn btn-outline-primary">Add Employee</button>
+      <button type="button" className="btn btn-outline-primary">Add Employee</button>
         <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
         </div>
     );
@@ -133,9 +172,28 @@ class EmployeeTable extends Component {
 }
 
 class ArcadeGameTable extends Component {
-  state = {
-    arcade_games: []
+  constructor() {
+    super();
+    this.state = {
+      arcade_games: [],
+    }
+    this.deleteEntry = this.deleteEntry.bind(this);
   }
+
+  deleteEntry(e){
+    var data = {
+      id: e.game_id
+    }
+    fetch("http://localhost:3001/gamesdb", {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+        console.log(err)
+    });
+}
 
   componentDidMount(){
     fetch('/gamesdb')
@@ -167,7 +225,7 @@ class ArcadeGameTable extends Component {
                 <td>{ac.game_cost}</td>
                 <td>{ac.play_count}</td>
                 <td><button type="button" className="btn btn-outline-warning">&#9998;</button></td>
-                <td><button type="button" className="btn btn-outline-danger">&#10005;</button></td>
+                <td><button onClick={() => this.deleteEntry(ac)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
               </tr>)}
           </tbody>
         </table>
@@ -179,9 +237,28 @@ class ArcadeGameTable extends Component {
 }
 
 class FoodTable extends Component {
-  state = {
-    food: [],
+  constructor() {
+    super();
+    this.state = {
+      food: [],
+    }
+    this.deleteEntry = this.deleteEntry.bind(this);
   }
+
+  deleteEntry(e){
+    var data = {
+      id: e.food_id
+    }
+    fetch("http://localhost:3001/fooddb", {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+        console.log(err)
+    });
+}
 
   componentDidMount(){
     fetch('/fooddb')
@@ -212,7 +289,7 @@ class FoodTable extends Component {
                 <td>{food.food_name}</td>
                 <td>{food.food_cost}</td>
                 <td><button type="button" className="btn btn-outline-warning">&#9998;</button></td>
-                <td><button type="button" className="btn btn-outline-danger">&#10005;</button></td>
+                <td><button onClick={() => this.deleteEntry(food)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
               </tr>)}
           </tbody>
         </table>
@@ -224,9 +301,28 @@ class FoodTable extends Component {
 }
 
 class BeverageTable extends Component {
-  state = {
-    beverage: [],
+  constructor() {
+    super();
+    this.state = {
+      beverage: [],
+    }
+    this.deleteEntry = this.deleteEntry.bind(this);
   }
+
+  deleteEntry(e){
+    var data = {
+      id: e.drink_id
+    }
+    fetch("http://localhost:3001/beveragedb", {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+        console.log(err)
+    });
+}
 
   componentDidMount(){
     fetch('/beveragedb')
@@ -257,7 +353,7 @@ class BeverageTable extends Component {
                 <td>{drink.drink_name}</td>
                 <td>{drink.drink_cost}</td>
                 <td><button type="button" className="btn btn-outline-warning">&#9998;</button></td>
-                <td><button type="button" className="btn btn-outline-danger">&#10005;</button></td>
+                <td><button onClick={() => this.deleteEntry(drink)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
               </tr>)}
           </tbody>
         </table>
@@ -269,12 +365,31 @@ class BeverageTable extends Component {
 }
 
 class PoolTable extends Component {
-  state = {
-    poolTable: [],
+  constructor() {
+    super();
+    this.state = {
+      poolTable: [],
+    }
+    this.deleteEntry = this.deleteEntry.bind(this);
   }
 
+  deleteEntry(e){
+    var data = {
+      id: e.p_table_id,
+    }
+    fetch('http://localhost:3001/pooltabledb', {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+        console.log(err)
+    });
+}
+
   componentDidMount(){
-    fetch('/poolTabledb')
+    fetch('/pooltabledb')
       .then(res => res.json())
       .then(poolTable=> this.setState({
         poolTable
@@ -283,7 +398,7 @@ class PoolTable extends Component {
 
   render() {
     return(
-      <div className="BeverageTable">
+      <div className="PoolTable">
         <table className="table">
           <thead>
             <tr>
@@ -299,7 +414,7 @@ class PoolTable extends Component {
                 <td>{p_table.p_table_id}</td>
                 <td>{p_table.p_cost}</td>
                 <td><button type="button" className="btn btn-outline-warning">&#9998;</button></td>
-                <td><button type="button" className="btn btn-outline-danger">&#10005;</button></td>
+                <td><button onClick={() => this.deleteEntry(p_table)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
               </tr>)}
           </tbody>
         </table>
@@ -311,9 +426,28 @@ class PoolTable extends Component {
 }
 
 class GiftShopTable extends Component {
-  state = {
-    giftShop: [],
+  constructor() {
+    super();
+    this.state = {
+      giftShop: [],
+    }
+    this.deleteEntry = this.deleteEntry.bind(this);
   }
+
+  deleteEntry(e){
+    var data = {
+      id: e.item_id
+    }
+    fetch("http://localhost:3001/giftshopdb", {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+        console.log(err)
+    });
+}
 
   componentDidMount(){
     fetch('/giftshopdb')
@@ -345,7 +479,7 @@ class GiftShopTable extends Component {
                 <td>{giftShop.item_quantity}</td>
                 <td>{giftShop.item_cost}</td>
                 <td><button type="button" className="btn btn-outline-warning">&#9998;</button></td>
-                <td><button type="button" className="btn btn-outline-danger">&#10005;</button></td>
+                <td><button onClick={() => this.deleteEntry(giftShop)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
               </tr>)}
           </tbody>
         </table>
