@@ -6,6 +6,10 @@ Main requirement is to use a relational database management system (RDBMS) with 
 - Node
 - Express (for routing + MySQL database)
 - [React.js](https://github.com/facebook/create-react-app)
+- react-modal
+- popper.js
+- Bootstrap
+- CORS (for cross port referencing)
 - MySQL
 
 ## Info
@@ -19,4 +23,4 @@ Main requirement is to use a relational database management system (RDBMS) with 
 
 ## TODO
 - Add new pieces of data to each respective table
-- Update + Delete operations
+- Update perations
