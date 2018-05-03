@@ -47,6 +47,27 @@ router.post('/edit', function(req, res, next) {
   res.end("success");
 });
 
+//edit playcount
+router.post('/editplaycount', function(req, res, next) {
+
+  console.log("Game ID: " + req.body.game_id);
+  console.log("Custommer ID: " + req.body.cust_id);
+
+  /*
+  UPDATE customer, arcade_machine
+SET customer.balance = customer.balance - arcade_machine.game_cost,
+customer.money_spent = customer.money_spent + arcade_machine.game_cost,
+arcade_machine.play_count = arcade_machine.play_count + 1
+WHERE customer.cust_id = 1 AND game_id = 1;
+  */
+  con.query('UPDATE customer, arcade_machine SET customer.balance = customer.balance - arcade_machine.game_cost, customer.money_spent = customer.money_spent + arcade_machine.game_cost, arcade_machine.play_count = arcade_machine.play_count + 1 WHERE customer.cust_id = '+req.body.cust_id+' AND arcade_machine.game_id = '+req.body.game_id, function(error, results) {
+          console.log("Arcade Machine " + req.body.game_id + " playcount edited");
+        })
+        res.end("success");
+
+});
+
+
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM arcade_machine WHERE game_id = '+req.body.id+'', function (error, results, fields) {
         if(error) throw error;

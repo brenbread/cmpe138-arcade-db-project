@@ -52,15 +52,22 @@ class CustomerTable extends Component {
     super();
     this.state = {
       customer: [],
+      arcade_games: [],
+      game_id: '',
+      game_cost:'',
+      game_name: '',
       cust_id: '',
       balance: '',
       money_spent: '',
       modalIsOpen: false,
-      modalNewIsOpen: false
+      modalNewIsOpen: false,
+      gameModalIsOpen: false
     }
 
     this.openModal = this.openModal.bind(this); //Edit entry Modal
     this.closeModal = this.closeModal.bind(this);
+    this.openPlayGameModal = this.openPlayGameModal.bind(this); //Play Game? Modal
+    this.closePlayGameModal = this.closePlayGameModal.bind(this);
 
     this.openModalNew = this.openModalNew.bind(this); //Add entry Modal
     this.closeModalNew = this.closeModalNew.bind(this);
@@ -76,7 +83,59 @@ class CustomerTable extends Component {
 
     this.deleteEntry = this.deleteEntry.bind(this);
     this.stateClear = this.stateClear.bind(this);
+
+    this.handlePlayGame = this.handlePlayGame.bind(this);
+    this.handleGameID = this.handleGameID.bind(this);
   }
+
+  handleGameID(e){
+    this.setState({
+      game_id: e.target.value,
+    })
+    console.log(e.target.value)
+  }
+
+  handlePlayGame(e){
+    var data = {
+      cust_id: this.state.cust_id,
+      game_id: this.state.game_id
+    }
+
+    console.log(this.state.balance);
+    console.log(this.state.game_cost);
+
+    if (data.game_id === ''){
+      alert('Please pick a game');
+    }
+    else {
+      if(this.state.balance <= 0){
+        alert('Customer ' + this.state.cust_id + ' has insufficient balance.')
+      }
+
+      else {
+        fetch("http://localhost:3001/gamesdb/editplaycount", {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+
+
+        }).then(function() {
+          console.log(data);
+          window.location.reload();
+        }).catch(function(err) {
+          console.log(err)
+        })
+        alert('Customer ' + this.state.cust_id + ' played game ' + this.state.game_id + '. Balance updated.');
+        console.log("Customer has been edited");
+      }
+    }
+
+
+
+    e.preventDefault();
+
+  }
+
 
   stateClear(){
     this.setState({
@@ -86,6 +145,23 @@ class CustomerTable extends Component {
       money_spent: ''
     });
   }
+
+  openPlayGameModal(e){
+    this.setState({
+      gameModalIsOpen: true,
+      cust_id: e.cust_id,
+      balance: e.balance,
+      money_spent: e.money_spent,
+
+    })
+  }
+
+  closePlayGameModal(){
+    this.setState({
+      gameModalIsOpen: false
+    })
+  }
+
 
   openModal(customer) {
     this.setState({
@@ -114,6 +190,7 @@ class CustomerTable extends Component {
       modalNewIsOpen: false
     });
   }
+
 
   //handle new adds
   handleID(e){
@@ -203,6 +280,12 @@ class CustomerTable extends Component {
       .then(customer => this.setState({
         customer
       }));
+
+      fetch('/gamesdb')
+        .then(res => res.json())
+        .then(arcade_games => this.setState({
+          arcade_games
+        }));
   }
 
   render() {
@@ -214,6 +297,7 @@ class CustomerTable extends Component {
               <th scope="col">Customer ID</th>
               <th scope="col">Balance</th>
               <th scope="col">Money Spent</th>
+              <th scope="col">Play Game?</th>
               <th scope="col">Update</th>
               <th scope="col">Delete</th>
             </tr>
@@ -224,6 +308,7 @@ class CustomerTable extends Component {
                   <td>{cust.cust_id}</td>
                   <td>{cust.balance}</td>
                   <td>{cust.money_spent}</td>
+                  <td><button onClick={() => this.openPlayGameModal(cust)} type="button" className="btn btn-outline-primary">Play Game?</button></td>
                   <td><button onClick={() => this.openModal(cust)} type="button" className="btn btn-outline-warning">&#9998;</button></td>
                   <td><button onClick={() => this.deleteEntry(cust)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
                 </tr>)}
@@ -231,6 +316,23 @@ class CustomerTable extends Component {
         </table>
         <button onClick={() => this.openModalNew()} type="button" className="btn btn-outline-primary">Add Customer</button>
         <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+
+          <Modal
+            isOpen={this.state.gameModalIsOpen}
+            onRequestClose={this.closePlayGameModal}
+            contentLabel="Example Modal">
+             <h3>Customer {this.state.cust_id} Plays...</h3>
+            <form onSubmit={this.handlePlayGame}>
+              <select value={this.state.game_id} onChange={this.handleGameID} className="input-group mb-3">
+                <option>Select Arcade Game</option>
+                {this.state.arcade_games.map(ac =>
+                    <option key={ac.game_id} value={ac.game_id}>ID: {ac.game_id} | {ac.game_name} | Cost: {ac.game_cost}</option>
+                )}
+              </select>
+              <br />
+               <button type="submit" className="btn btn-outline-primary">Update Entry</button>
+           </form>
+          </Modal>
 
           <Modal
             isOpen={this.state.modalIsOpen}

@@ -23,4 +23,4 @@ Main requirement is to use a relational database management system (RDBMS) with 
 2. Open another terminal instance, open this folder and `cd client` and run `npm start` to start the React.js portion
 
 ## TODO
-- Special operations
+- More special operations
