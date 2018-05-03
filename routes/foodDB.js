@@ -35,6 +35,18 @@ router.post('/add', function(req, res, next) {
   console.log("Added: " + data);
 });
 
+router.post('/edit', function(req, res, next) {
+  var data = {
+    food_id: req.body.food_id,
+    food_name: req.body.food_name,
+    food_cost: req.body.food_cost
+  };
+  con.query('UPDATE food SET ? WHERE food_id = ' + req.body.food_id, data, function(error, results) {
+    console.log("Food " + req.body.food_id + " edited");
+  })
+  res.end("success");
+});
+
 
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM food WHERE food_id = '+req.body.id+'', function (error, results, fields) {

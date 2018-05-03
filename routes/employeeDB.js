@@ -23,6 +23,18 @@ router.get('/', function(req, res, next) {
   });
 });
 
+//edit route
+router.post('/edit', function(req, res, next) {
+  var data = {
+    emp_name: req.body.emp_name,
+    emp_type: req.body.emp_type
+  };
+  con.query('UPDATE employee SET ? WHERE emp_id = ' + req.body.emp_id, data, function(error, results) {
+    console.log("Employee " + req.body.emp_name + " edited");
+  })
+  res.end("success");
+});
+
 router.post('/add', function(req, res, next) {
   var data = req.body;
 
@@ -33,7 +45,7 @@ router.post('/add', function(req, res, next) {
   console.log("Added: " + data);
 });
 
-// DELETE FROM employee WHERE emp_id = <id passed from function>
+// DELETE 
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM employee WHERE emp_id = '+req.body.id+'', function (error, results, fields) {
         if(error) throw error;

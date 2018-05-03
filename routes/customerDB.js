@@ -25,9 +25,14 @@ router.get('/', function(req, res, next) {
 
 //edit route
 router.post('/edit', function(req, res, next) {
-  var data = req.body;
-  console.log(data);
-  console.log("Edit can work");
+  var data = {
+    balance: req.body.balance,
+    money_spent: req.body.money_spent
+  };
+  con.query('UPDATE customer SET ? WHERE cust_id = ' + req.body.cust_id, data, function(error, results) {
+    console.log("Customer " + req.body.cust_id + " edited");
+  })
+  res.end("success");
 });
 
 router.post('/add', function(req, res, next) {

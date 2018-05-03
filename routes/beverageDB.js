@@ -35,6 +35,19 @@ router.post('/add', function(req, res, next) {
   console.log("Added: " + data);
 });
 
+//edit
+router.post('/edit', function(req, res, next) {
+  var data = {
+    drink_name: req.body.drink_name,
+    drink_cost: req.body.drink_cost
+  };
+  con.query('UPDATE beverage SET ? WHERE drink_id = ' + req.body.drink_id, data, function(error, results) {
+    console.log("Beverage " + req.body.drink_id + " edited");
+  })
+  res.end("success");
+});
+
+
 
 //delete
 router.delete('/', function(req, res, next) {

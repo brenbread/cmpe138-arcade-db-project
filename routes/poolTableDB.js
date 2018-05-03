@@ -35,6 +35,19 @@ console.log(data);
   console.log("Added: " + data);
 });
 
+//edit route
+router.post('/edit', function(req, res, next) {
+  var data = {
+    p_table_id: req.body.p_table_id,
+    p_cost: req.body.p_cost
+  };
+  con.query('UPDATE pool_table SET ? WHERE p_table_id = ' + req.body.p_table_id, data, function(error, results) {
+    console.log("Pool table " + req.body.p_table_id + " edited");
+  })
+  res.end("success");
+});
+
+
 //delete route
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM pool_table WHERE p_table_id = '+req.body.id+'', function (error, results, fields) {

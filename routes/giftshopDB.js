@@ -36,6 +36,20 @@ router.post('/add', function(req, res, next) {
   console.log("Added: " + data);
 });
 
+//edit
+router.post('/edit', function(req, res, next) {
+  var data = {
+    item_name: req.body.item_name,
+    item_quantity: req.body.item_quantity,
+    item_cost: req.body.item_cost
+  };
+  con.query('UPDATE gift_shop SET ? WHERE item_id = ' + req.body.item_id, data, function(error, results) {
+    console.log("Gift Shop Item " + req.body.item_id + " edited");
+  })
+  res.end("success");
+});
+
+//delete
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM gift_shop WHERE item_id = '+req.body.id+'', function (error, results, fields) {
         if(error) throw error;
