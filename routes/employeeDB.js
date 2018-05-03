@@ -23,6 +23,16 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.post('/add', function(req, res, next) {
+  var data = req.body;
+
+  con.query('INSERT INTO employee SET ?', data, function(error, results) {
+    console.log("Employee " + req.body.emp_id + " added");
+  })
+  res.end("success");
+  console.log("Added: " + data);
+});
+
 // DELETE FROM employee WHERE emp_id = <id passed from function>
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM employee WHERE emp_id = '+req.body.id+'', function (error, results, fields) {

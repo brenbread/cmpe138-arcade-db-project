@@ -22,6 +22,20 @@ router.get('/', function(req, res, next) {
   });
 });
 
+//add route
+router.post('/add', function(req, res, next) {
+  var data = req.body;
+
+  con.query('INSERT INTO beverage SET ?', data, function(error, results) {
+    if(error) throw error;
+    console.log(data);
+    console.log("Beverage " + req.body.drink_id + " added");
+  })
+  res.end("success");
+  console.log("Added: " + data);
+});
+
+
 //delete
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM beverage WHERE drink_id = '+req.body.id+'', function (error, results, fields) {

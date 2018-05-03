@@ -23,6 +23,19 @@ router.get('/', function(req, res, next) {
   });
 });
 
+//add route
+router.post('/add', function(req, res, next) {
+  var data = req.body;
+
+  con.query('INSERT INTO gift_shop SET ?', data, function(error, results) {
+    if(error) throw error;
+    console.log(data);
+    console.log("Game " + req.body.item_id + " added");
+  })
+  res.end("success");
+  console.log("Added: " + data);
+});
+
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM gift_shop WHERE item_id = '+req.body.id+'', function (error, results, fields) {
         if(error) throw error;

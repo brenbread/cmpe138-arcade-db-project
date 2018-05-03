@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Modal from 'react-modal';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'; //bootstrap
 
 //Main app, holds the tables from the database
@@ -51,9 +52,114 @@ class CustomerTable extends Component {
     super();
     this.state = {
       customer: [],
+      cust_id: '',
+      balance: '',
+      money_spent: '',
+      modalIsOpen: false,
+      modalNewIsOpen: false
     }
+
+    this.openModal = this.openModal.bind(this); //Edit entry Modal
+    this.closeModal = this.closeModal.bind(this);
+
+    this.openModalNew = this.openModalNew.bind(this); //Add entry Modal
+    this.closeModalNew = this.closeModalNew.bind(this);
+
+    //handle inputs
+    this.handleID = this.handleID.bind(this);
+    this.handleBalance = this.handleBalance.bind(this)
+    this.handleMoneySpent = this.handleMoneySpent.bind(this);
+
+    this.handleAdd = this.handleAdd.bind(this);
+    this.handleEdit = this.handleEdit.bind(this); //handle data submission
+
     this.deleteEntry = this.deleteEntry.bind(this);
   }
+
+  openModal(customer) {
+    this.setState({
+      modalIsOpen: true,
+      id: customer.cust_id,
+      balance: customer.balance,
+      money_spent: customer.money_spent
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      modalIsOpen: false
+    });
+  }
+
+  openModalNew(){
+    this.setState({
+      modalNewIsOpen: true,
+    });
+  }
+
+  closeModalNew(){
+    this.setState({
+      modalNewIsOpen: false
+    });
+  }
+
+  //handle new adds
+  handleID(e){
+    this.setState({
+      cust_id: e.target.value
+    })
+  }
+
+  handleBalance(e){
+    this.setState({
+      balance: e.target.value
+    })
+  }
+
+  handleMoneySpent(e){
+    this.setState({
+      money_spent: e.target.value
+    })
+  }
+
+  handleAdd(e) {
+    var data = {
+      cust_id: this.state.cust_id,
+      balance: this.state.balance,
+      money_spent: this.state.money_spent
+    }
+    console.log(data);
+
+    fetch("http://localhost:3001/customerdb/add", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+      console.log(err)
+    })
+    e.preventDefault();
+  }
+  handleEdit(e) {
+
+    var data = {
+      cust_id: this.state.cust_id,
+      balance: this.state.balance,
+      money_spent: this.state.money_spent
+    }
+    console.log(data);
+
+    fetch("http://localhost:3001/customerdb/edit", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+    }).catch(function(err) {
+      console.log(err)
+    })
+    e.preventDefault();
+  }
+
 
   deleteEntry(e){
     var data = {
@@ -97,24 +203,148 @@ class CustomerTable extends Component {
                   <td>{cust.cust_id}</td>
                   <td>{cust.balance}</td>
                   <td>{cust.money_spent}</td>
-                  <td><button type="button" className="btn btn-outline-warning">&#9998;</button></td>
-                    <td><button onClick={() => this.deleteEntry(cust)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
+                  <td><button onClick={() => this.openModal(cust)} type="button" className="btn btn-outline-warning">&#9998;</button></td>
+                  <td><button onClick={() => this.deleteEntry(cust)} type="button" className="btn btn-outline-danger">&#10005;</button></td>
                 </tr>)}
           </tbody>
         </table>
-        <button type="button" className="btn btn-outline-primary">Add Customer</button>
+        <button onClick={() => this.openModalNew()} type="button" className="btn btn-outline-primary">Add Customer</button>
         <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+          <Modal
+            isOpen={this.state.modalNewIsOpen}
+            onRequestClose={this.closeModalNew}
+            contentLabel="Example Modal">
+             <h3>Add Customer</h3>
+            <form onSubmit={this.handleAdd} method='POST'>
+              <label>Customer ID</label>
+                <input
+                  type="number"
+                  value={this.state.cust_id}
+                  onChange={this.handleID}
+                  className="form-control"
+                  placeholder='1234'
+                 />
+              <br />
+             <label>Balance</label>
+               <input
+                 type="number"
+                 value={this.state.balance}
+                 onChange={this.handleBalance}
+                 className="form-control"
+                 placeholder='Current Arcade Balance'
+                />
+             <br />
+              <label>Money Spent</label>
+              <br />
+                <input
+                  type="number"
+                  value={this.state.money_spent}
+                  onChange={this.handleMoneySpent}
+                  className="form-control"
+                  placeholder='0'
+                 />
+               <br />
+               <button type="submit" className="btn btn-outline-primary">Add Entry</button>
+           </form>
+          </Modal>
         </div>
     );
   }
 }
+
+
 class EmployeeTable extends Component {
   constructor() {
     super();
     this.state = {
-      employee: []
+      employee: [],
+      emp_id: '',
+      emp_name: '',
+      emp_type: '',
+      modalIsOpen: false,
+      modalNewIsOpen: false
     }
+    this.openModal = this.openModal.bind(this); //Edit entry Modal
+    this.closeModal = this.closeModal.bind(this);
+
+    this.openModalNew = this.openModalNew.bind(this); //Add entry Modal
+    this.closeModalNew = this.closeModalNew.bind(this);
+
+    //handle inputs
+    this.handleID = this.handleID.bind(this);
+    this.handleName = this.handleName.bind(this)
+    this.handleType = this.handleType.bind(this);
+
+    this.handleAdd = this.handleAdd.bind(this);
+
+
     this.deleteEntry = this.deleteEntry.bind(this);
+  }
+
+  //edit modal
+  openModal(employee) {
+    this.setState({
+      modalIsOpen: true,
+
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      modalIsOpen: false
+    });
+  }
+
+  //add modal
+  openModalNew(){
+    this.setState({
+      modalNewIsOpen: true,
+    });
+  }
+
+  closeModalNew(){
+    this.setState({
+      modalNewIsOpen: false
+    });
+  }
+
+  //handle new adds
+  handleID(e){
+    this.setState({
+      emp_id: e.target.value
+    })
+  }
+
+  handleName(e){
+    this.setState({
+      emp_name: e.target.value
+    })
+  }
+
+  handleType(e){
+    this.setState({
+      emp_type: e.target.value
+    })
+  }
+
+  handleAdd(e) {
+    var data = {
+      emp_id: this.state.emp_id,
+      emp_name: this.state.emp_name,
+      emp_type: this.state.emp_type
+    }
+    console.log(data);
+
+    fetch("http://localhost:3001/employeedb/add", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+      console.log(err)
+    })
+    e.preventDefault();
   }
 
   deleteEntry(e){
@@ -164,8 +394,46 @@ class EmployeeTable extends Component {
                 </tr>)}
           </tbody>
         </table>
-      <button type="button" className="btn btn-outline-primary">Add Employee</button>
+
+        <button onClick={() => this.openModalNew()} type="button" className="btn btn-outline-primary">Add Employee</button>
         <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+        <Modal
+          isOpen={this.state.modalNewIsOpen}
+          onRequestClose={this.closeModalNew}
+          contentLabel="Example Modal">
+           <h3>Add Employee</h3>
+          <form onSubmit={this.handleAdd} method='POST'>
+            <label>Employee ID</label>
+              <input
+                type="number"
+                value={this.state.emp_id}
+                onChange={this.handleID}
+                className="form-control"
+                placeholder='1234'
+               />
+            <br />
+           <label>Name</label>
+             <input
+               type="text"
+               value={this.state.emp_name}
+               onChange={this.handleName}
+               className="form-control"
+               placeholder='John Doe'
+              />
+           <br />
+            <label>Type</label>
+            <br />
+              <input
+                type="text"
+                value={this.state.emp_type}
+                onChange={this.handleType}
+                className="form-control"
+                placeholder='Employee Role'
+               />
+             <br />
+             <button type="submit" className="btn btn-outline-primary">Add Entry</button>
+         </form>
+        </Modal>
         </div>
     );
   }
@@ -176,8 +444,80 @@ class ArcadeGameTable extends Component {
     super();
     this.state = {
       arcade_games: [],
+      game_id: '',
+      game_name: '',
+      game_cost: '',
+      play_count: 0,
+      modalIsOpen: false,
+      modalNewIsOpen: false
     }
+    this.handleID = this.handleID.bind(this);
+    this.handleName = this.handleName.bind(this);
+    this.handleCost = this.handleCost.bind(this);
+    this.handlePlayCount = this.handlePlayCount.bind(this);
+    this.handleAdd = this.handleAdd.bind(this);
     this.deleteEntry = this.deleteEntry.bind(this);
+
+    this.openModalNew = this.openModalNew.bind(this);
+    this.closeModalNew = this.closeModalNew.bind(this);
+  }
+
+  //add modal
+  openModalNew(){
+    this.setState({
+      modalNewIsOpen: true,
+    });
+  }
+
+  closeModalNew(){
+    this.setState({
+      modalNewIsOpen: false
+    });
+  }
+
+  handleID(e){
+    this.setState({
+      game_id: e.target.value
+    })
+  }
+
+  handleName(e){
+    this.setState({
+      game_name: e.target.value
+    })
+  }
+
+  handleCost(e){
+    this.setState({
+      game_cost: e.target.value
+    })
+  }
+
+  handlePlayCount(e){
+    this.setState({
+      play_count: e.target.value
+    })
+  }
+
+  handleAdd(e) {
+    var data = {
+      game_name: this.state.game_name,
+      game_id: this.state.game_id,
+      game_cost: this.state.game_cost,
+      play_count: this.state.play_count
+    }
+    console.log(data);
+
+    fetch("http://localhost:3001/gamesdb/add", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+      console.log(err)
+    })
+    e.preventDefault();
   }
 
   deleteEntry(e){
@@ -229,8 +569,46 @@ class ArcadeGameTable extends Component {
               </tr>)}
           </tbody>
         </table>
-        <button type="button" className="btn btn-outline-primary">Add Arcade Machine</button>
-        <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+        <button onClick={() => this.openModalNew()} type="button" className="btn btn-outline-primary">Add Arcade Machine</button>
+          <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+
+          <Modal
+            isOpen={this.state.modalNewIsOpen}
+            onRequestClose={this.closeModalNew}
+            contentLabel="Example Modal">
+             <h3>Add Arcade Machine</h3>
+            <form onSubmit={this.handleAdd} method='POST'>
+              <label>Machine ID</label>
+                <input
+                  type="number"
+                  value={this.state.game_id}
+                  onChange={this.handleID}
+                  className="form-control"
+                  placeholder='1234'
+                 />
+              <br />
+             <label>Machine Name</label>
+               <input
+                 type="text"
+                 value={this.state.game_name}
+                 onChange={this.handleName}
+                 className="form-control"
+                 placeholder='Dance Rush Stardom'
+                />
+             <br />
+              <label>Cost</label>
+              <br />
+                <input
+                  type="number"
+                  value={this.state.game_cost}
+                  onChange={this.handleCost}
+                  className="form-control"
+                  placeholder='573 credits'
+                 />
+               <br />
+               <button type="submit" className="btn btn-outline-primary">Add Entry</button>
+           </form>
+          </Modal>
       </div>
     )
   }
@@ -241,8 +619,75 @@ class FoodTable extends Component {
     super();
     this.state = {
       food: [],
+      food_name: '',
+      food_id: '',
+      food_cost: '',
+      modalNewIsOpen: false,
+      modalIsOpen: false
     }
+
+    this.openModalNew = this.openModalNew.bind(this);
+    this.closeModalNew = this.closeModalNew.bind(this);
+
+    this.handleName = this.handleName.bind(this);
+    this.handleID = this.handleID.bind(this);
+    this.handleCost = this.handleCost.bind(this);
+
+    this.handleAdd = this.handleAdd.bind(this);
     this.deleteEntry = this.deleteEntry.bind(this);
+
+  }
+
+  //add modal
+  openModalNew(){
+    this.setState({
+      modalNewIsOpen: true,
+    });
+  }
+
+  closeModalNew(){
+    this.setState({
+      modalNewIsOpen: false
+    });
+  }
+
+  handleID(e){
+    this.setState({
+      food_id: e.target.value
+    })
+  }
+
+  handleName(e){
+    this.setState({
+      food_name: e.target.value
+    })
+  }
+
+  handleCost(e){
+    this.setState({
+      food_cost: e.target.value
+    })
+  }
+
+
+  handleAdd(e) {
+    var data = {
+      food_name: this.state.food_name,
+      food_id: this.state.food_id,
+      food_cost: this.state.food_cost
+    }
+    console.log(data);
+
+    fetch("http://localhost:3001/fooddb/add", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+      console.log(err)
+    })
+    e.preventDefault();
   }
 
   deleteEntry(e){
@@ -293,8 +738,46 @@ class FoodTable extends Component {
               </tr>)}
           </tbody>
         </table>
-        <button type="button" className="btn btn-outline-primary">Add Food Item</button>
-        <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+        <button onClick={() => this.openModalNew()} type="button" className="btn btn-outline-primary">Add Food</button>
+          <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+
+          <Modal
+            isOpen={this.state.modalNewIsOpen}
+            onRequestClose={this.closeModalNew}
+            contentLabel="Example Modal">
+             <h3>Add Food</h3>
+            <form onSubmit={this.handleAdd} method='POST'>
+              <label>Food ID</label>
+                <input
+                  type="number"
+                  value={this.state.food_id}
+                  onChange={this.handleID}
+                  className="form-control"
+                  placeholder='1234'
+                 />
+              <br />
+             <label>Food Name</label>
+               <input
+                 type="text"
+                 value={this.state.food_name}
+                 onChange={this.handleName}
+                 className="form-control"
+                 placeholder='Chicken Tendies'
+                />
+             <br />
+              <label>Cost</label>
+              <br />
+                <input
+                  type="number"
+                  value={this.state.food_cost}
+                  onChange={this.handleCost}
+                  className="form-control"
+                  placeholder='5 dollars'
+                 />
+               <br />
+               <button type="submit" className="btn btn-outline-primary">Add Entry</button>
+           </form>
+          </Modal>
       </div>
     )
   }
@@ -305,8 +788,73 @@ class BeverageTable extends Component {
     super();
     this.state = {
       beverage: [],
+      drink_name: '',
+      drink_id: '',
+      drink_cost: '',
+      modalNewIsOpen: false,
+      modalIsOpen: false
     }
+    this.openModalNew = this.openModalNew.bind(this);
+    this.closeModalNew = this.closeModalNew.bind(this);
+
+    this.handleName = this.handleName.bind(this);
+    this.handleID = this.handleID.bind(this);
+    this.handleCost = this.handleCost.bind(this);
+
+    this.handleAdd = this.handleAdd.bind(this);
     this.deleteEntry = this.deleteEntry.bind(this);
+  }
+
+  //add modal
+  openModalNew(){
+    this.setState({
+      modalNewIsOpen: true,
+    });
+  }
+
+  closeModalNew(){
+    this.setState({
+      modalNewIsOpen: false
+    });
+  }
+
+  handleID(e){
+    this.setState({
+      drink_id: e.target.value
+    })
+  }
+
+  handleName(e){
+    this.setState({
+      drink_name: e.target.value
+    })
+  }
+
+  handleCost(e){
+    this.setState({
+      drink_cost: e.target.value
+    })
+  }
+
+
+  handleAdd(e) {
+    var data = {
+      drink_name: this.state.drink_name,
+      drink_id: this.state.drink_id,
+      drink_cost: this.state.drink_cost
+    }
+    console.log(data);
+
+    fetch("http://localhost:3001/beveragedb/add", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+      console.log(err)
+    })
+    e.preventDefault();
   }
 
   deleteEntry(e){
@@ -357,8 +905,46 @@ class BeverageTable extends Component {
               </tr>)}
           </tbody>
         </table>
-        <button type="button" className="btn btn-outline-primary">Add Drink</button>
-        <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+        <button onClick={() => this.openModalNew()} type="button" className="btn btn-outline-primary">Add Beverage</button>
+          <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+
+          <Modal
+            isOpen={this.state.modalNewIsOpen}
+            onRequestClose={this.closeModalNew}
+            contentLabel="Example Modal">
+             <h3>Add Beverage</h3>
+            <form onSubmit={this.handleAdd} method='POST'>
+              <label>Drink ID</label>
+                <input
+                  type="number"
+                  value={this.state.drink_id}
+                  onChange={this.handleID}
+                  className="form-control"
+                  placeholder='1234'
+                 />
+              <br />
+             <label>Drink Name</label>
+               <input
+                 type="text"
+                 value={this.state.drink_name}
+                 onChange={this.handleName}
+                 className="form-control"
+                 placeholder='Ramune'
+                />
+             <br />
+              <label>Cost</label>
+              <br />
+                <input
+                  type="number"
+                  value={this.state.drink_cost}
+                  onChange={this.handleCost}
+                  className="form-control"
+                  placeholder='3 credits'
+                 />
+               <br />
+               <button type="submit" className="btn btn-outline-primary">Add Entry</button>
+           </form>
+          </Modal>
       </div>
     )
   }
@@ -369,8 +955,63 @@ class PoolTable extends Component {
     super();
     this.state = {
       poolTable: [],
+      p_table_id: '',
+      p_cost: '',
+      modalNewIsOpen: false,
+      modalIsOpen: false
     }
+    this.openModalNew = this.openModalNew.bind(this);
+    this.closeModalNew = this.closeModalNew.bind(this);
+
+    this.handleID = this.handleID.bind(this);
+    this.handleCost = this.handleCost.bind(this);
+
+    this.handleAdd = this.handleAdd.bind(this);
     this.deleteEntry = this.deleteEntry.bind(this);
+  }
+
+  //add modal
+  openModalNew(){
+    this.setState({
+      modalNewIsOpen: true,
+    });
+  }
+
+  closeModalNew(){
+    this.setState({
+      modalNewIsOpen: false
+    });
+  }
+
+  handleID(e){
+    this.setState({
+      p_table_id: e.target.value
+    })
+  }
+
+  handleCost(e){
+    this.setState({
+      p_cost: e.target.value
+    })
+  }
+
+  handleAdd(e) {
+    var data = {
+      p_table_id: this.state.p_table_id,
+      p_cost: this.state.p_cost
+    }
+    console.log(data);
+
+    fetch("http://localhost:3001/pooltabledb/add", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+      console.log(err)
+    })
+    e.preventDefault();
   }
 
   deleteEntry(e){
@@ -418,8 +1059,37 @@ class PoolTable extends Component {
               </tr>)}
           </tbody>
         </table>
-        <button type="button" className="btn btn-outline-primary">Add Pool Table</button>
-        <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+        <button onClick={() => this.openModalNew()} type="button" className="btn btn-outline-primary">Add Pool Table</button>
+          <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+
+          <Modal
+            isOpen={this.state.modalNewIsOpen}
+            onRequestClose={this.closeModalNew}
+            contentLabel="Example Modal">
+             <h3>Add Pool Table</h3>
+            <form onSubmit={this.handleAdd} method='POST'>
+              <label>Pool Table ID</label>
+                <input
+                  type="number"
+                  value={this.state.p_table_id}
+                  onChange={this.handleID}
+                  className="form-control"
+                  placeholder='1234'
+                 />
+              <br />
+              <label>Cost</label>
+              <br />
+                <input
+                  type="number"
+                  value={this.state.p_cost}
+                  onChange={this.handleCost}
+                  className="form-control"
+                  placeholder='3 credits'
+                 />
+               <br />
+               <button type="submit" className="btn btn-outline-primary">Add Entry</button>
+           </form>
+          </Modal>
       </div>
     )
   }
@@ -430,8 +1100,81 @@ class GiftShopTable extends Component {
     super();
     this.state = {
       giftShop: [],
+      item_id: '',
+      item_name: '',
+      item_quantity: '',
+      item_cost: '',
+      modalNewIsOpen: false,
+      modalIsOpen: false
     }
+    this.openModalNew = this.openModalNew.bind(this);
+    this.closeModalNew = this.closeModalNew.bind(this);
+
+    this.handleID = this.handleID.bind(this);
+    this.handleName = this.handleName.bind(this);
+    this.handleQuantity = this.handleQuantity.bind(this);
+    this.handleCost = this.handleCost.bind(this);
+
+    this.handleAdd = this.handleAdd.bind(this);
     this.deleteEntry = this.deleteEntry.bind(this);
+  }
+
+  //add modal
+  openModalNew(){
+    this.setState({
+      modalNewIsOpen: true,
+    });
+  }
+
+  closeModalNew(){
+    this.setState({
+      modalNewIsOpen: false
+    });
+  }
+
+  handleID(e){
+    this.setState({
+      item_id: e.target.value
+    })
+  }
+
+  handleName(e){
+    this.setState({
+      item_name: e.target.value
+    })
+  }
+
+  handleQuantity(e){
+    this.setState({
+      item_quantity: e.target.value
+    })
+  }
+
+  handleCost(e){
+    this.setState({
+      item_cost: e.target.value
+    })
+  }
+
+  handleAdd(e) {
+    var data = {
+      item_id: this.state.item_id,
+      item_name: this.state.item_name,
+      item_quantity: this.state.item_quantity,
+      item_cost: this.state.item_cost
+    }
+    console.log(data);
+
+    fetch("http://localhost:3001/giftshopdb/add", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(function() {
+      window.location.reload();
+    }).catch(function(err) {
+      console.log(err)
+    })
+    e.preventDefault();
   }
 
   deleteEntry(e){
@@ -483,8 +1226,55 @@ class GiftShopTable extends Component {
               </tr>)}
           </tbody>
         </table>
-        <button type="button" className="btn btn-outline-primary">Add Gift Shop Item</button>
-        <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+        <button onClick={() => this.openModalNew()} type="button" className="btn btn-outline-primary">Add Gift Shop Item</button>
+          <a className="btn btn-outline-secondary" href="#top">Top &#8593;</a>
+
+          <Modal
+            isOpen={this.state.modalNewIsOpen}
+            onRequestClose={this.closeModalNew}
+            contentLabel="Example Modal">
+             <h3>Add Gift Shop Item</h3>
+            <form onSubmit={this.handleAdd} method='POST'>
+              <label>Item ID</label>
+                <input
+                  type="number"
+                  value={this.state.item_id}
+                  onChange={this.handleID}
+                  className="form-control"
+                  placeholder='1234'
+                 />
+              <br />
+             <label>Item Name</label>
+               <input
+                 type="text"
+                 value={this.state.item_name}
+                 onChange={this.handleName}
+                 className="form-control"
+                 placeholder='Some Prize That Whales Go For'
+                />
+             <br />
+               <label>Quantity</label>
+                 <input
+                   type="number"
+                   value={this.state.item_quantity}
+                   onChange={this.handleQuantity}
+                   className="form-control"
+                   placeholder='100'
+                  />
+               <br />
+              <label>Cost</label>
+              <br />
+                <input
+                  type="number"
+                  value={this.state.item_cost}
+                  onChange={this.handleCost}
+                  className="form-control"
+                  placeholder='3'
+                 />
+               <br />
+               <button type="submit" className="btn btn-outline-primary">Add Entry</button>
+           </form>
+          </Modal>
       </div>
     )
   }

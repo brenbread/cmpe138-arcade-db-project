@@ -7,6 +7,7 @@ Main requirement is to use a relational database management system (RDBMS) with 
 - Express (for routing + MySQL database)
 - [React.js](https://github.com/facebook/create-react-app)
 - react-modal
+- react-validation
 - popper.js
 - Bootstrap
 - CORS (for cross port referencing)

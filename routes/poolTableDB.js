@@ -22,6 +22,19 @@ router.get('/', function(req, res, next) {
   });
 });
 
+//add route
+router.post('/add', function(req, res, next) {
+  var data = req.body;
+console.log(data);
+  con.query('INSERT INTO pool_table SET ?', data, function(error, results) {
+    if(error) throw error;
+
+    console.log("Pool Table " + req.body.p_table_id + " added");
+  })
+  res.end("success");
+  console.log("Added: " + data);
+});
+
 //delete route
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM pool_table WHERE p_table_id = '+req.body.id+'', function (error, results, fields) {

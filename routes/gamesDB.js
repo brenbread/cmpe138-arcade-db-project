@@ -22,6 +22,19 @@ router.get('/', function(req, res, next) {
   });
 });
 
+//add route
+router.post('/add', function(req, res, next) {
+  var data = req.body;
+
+  con.query('INSERT INTO arcade_machine SET ?', data, function(error, results) {
+    if(error) throw error;
+    console.log(data);
+    console.log("Game " + req.body.game_id + " added");
+  })
+  res.end("success");
+  console.log("Added: " + data);
+});
+
 router.delete('/', function(req, res, next) {
     con.query('DELETE FROM arcade_machine WHERE game_id = '+req.body.id+'', function (error, results, fields) {
         if(error) throw error;
